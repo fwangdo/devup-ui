@@ -128,4 +128,40 @@ function App() {
 
 ---
 
-## Knowledge for Contribution
+## Knowledge for Contribution: Available CSS Props in Box
+
+The `Box` component supports a wide range of CSS properties, pseudo-classes, and theme-based props.
+Developers don’t need to know all the internal details, but here’s a brief overview of how these props are defined at the type level.
+
+---
+
+## Core Snippet (Type-Level Definition)
+
+```ts
+import type { Pseudos } from 'csstype'
+
+import type { DevupProps } from '../index'
+
+export type NormalSelector = Exclude<
+  Pseudos,
+  `:-${string}` | `::-${string}` | `${string}()`
+>
+
+export type ExtractSelector<T = NormalSelector> = T extends `::${infer R}`
+  ? R
+  : T extends `:${infer R}`
+    ? R
+    : never
+
+export type CommonSelectorProps = {
+  [K in ExtractSelector as
+    | `_${CamelCase<K>}`
+    | `_group${PascalCase<K>}`]?: ResponsiveValue<DevupProps | string | false>
+}
+```
+
+- `Pseudos` from `csstype` provides all CSS pseudo-classes and pseudo-elements.
+- `ExtractSelector` strips the leading `:` or `::` from pseudo-class/element names.
+- `CommonSelectorProps` maps each pseudo selector to a typed prop (e.g., `_hover`, `_groupHover`) and allows **all base CSS props (`DevupProps`) as values**.
+
+Note: Internally, Box prop strings are lexed at the type level to derive one or more possible prop types.
