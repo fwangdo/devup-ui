@@ -1,28 +1,63 @@
 export const metadata = {
   title: 'Box',
   alternates: {
-      canonical: '/docs/api/box',
-  }
-
+    canonical: '/docs/api/box',
+  },
 }
 
 # Box
 
-The `Box` component is a layout primitive that can be used to create any kind of layout.
+The `Box` component is a **layout primitive** designed for flexible composition.
+It follows **JSX syntax** — you can define elements with `<Box ... />` and pass style properties directly as props.
 
-It is just a `div` with some styles.
+It supports **multiple styling syntaxes**, including:
 
-## How to use
+- **Pure React style props** (e.g. `bg="red"`, `flex={1}`)
+- **Tailwind-like shorthand** (e.g. `p={4}`, `mt={2}`, `text="center"`)
+
+You can freely mix both styles depending on your preference.
+
+---
+
+## How It Works
+
+`Box` is essentially a styled `div` that translates its props into CSS classes and inline styles.
+You can think of it as the foundation for layout and spacing, similar to how Tailwind or styled-components work — but unified into a single declarative interface.
+
+If you pass a number without a unit, it is automatically **scaled by 4**
+(so `1` → `4px`, `2` → `8px`, `3` → `12px`, and so on).
+
+However, the following properties **are not multiplied by 4**:
+
+- `opacity`
+- `flex`
+- `z-index`
+- `line-clamp`
+- `font-weight`
+- `line-height`
+- `scale`
+- `aspect-ratio`
+- `flex-grow`
+- `flex-shrink`
+- `order`
+- `grid-column`, `grid-column-start`, `grid-column-end`
+- `grid-row`, `grid-row-start`, `grid-row-end`
+- `animation-iteration-count`
+- `tab-size`, `moz-tab-size`, `-webkit-line-clamp`
+
+---
+
+## Example (React-style props)
 
 ```tsx
 import { Box } from '@devup-ui/react'
 
 function App() {
-  return <Box bg="red" flex={1} height="100px" width={100} />
+  return <Box bg="red" flex={1} height={100} width={100} />
 }
 ```
 
-The Box component defined above will render like this:
+Rendered result:
 
 ```tsx
 function App() {
@@ -45,30 +80,29 @@ function App() {
 }
 ```
 
-If you pass a number without a unit to a style property, it will be automatically scaled by 4.
-This means 1 equals 4px, 2 equals 8px, and so on.
+---
 
-However, the following properties are exceptions and **are not multiplied by 4**:
+## Example (Tailwind-like syntax)
 
-- `opacity`
-- `flex`
-- `z-index`
-- `line-clamp`
-- `font-weight`
-- `line-height`
-- `scale`
-- `aspect-ratio`
-- `flex-grow`
-- `flex-shrink`
-- `order`
-- `grid-column`, `grid-column-start`, `grid-column-end`
-- `grid-row`, `grid-row-start`, `grid-row-end`
-- `animation-iteration-count`
-- `tab-size`, `moz-tab-size`, `-webkit-line-clamp`
+```tsx
+import { Box } from '@devup-ui/react'
 
-### Rendering as Another Element
+function App() {
+  return (
+    <Box className="p-4 mt-2 bg-blue-500 text-center rounded-lg">
+      Hello DevUp!
+    </Box>
+  )
+}
+```
 
-You can use the `as` prop to change the element type.
+This will render a `div` with equivalent Tailwind-like styles applied.
+
+---
+
+## Rendering as Another Element
+
+You can change the rendered HTML element using the `as` prop:
 
 ```tsx
 import { Box } from '@devup-ui/react'
@@ -78,7 +112,7 @@ function App() {
 }
 ```
 
-By using the as prop, you can render it as another element as shown below:
+Which compiles to:
 
 ```tsx
 function App() {
@@ -91,3 +125,7 @@ function App() {
   background: red;
 }
 ```
+
+---
+
+## Knowledge for Contribution
